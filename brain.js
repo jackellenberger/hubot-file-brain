@@ -11,23 +11,50 @@
 //   None
 //
 // Author:
-//   Josh King <jking@chambana.net>, lightly modified from work by dustyburwell
+//   Jack Ellenberger <jellenberger@uchicago.edu>
+//   lightly modified from work by Josh King <jking@chambana.net>
+//   lightly modified from work by dustyburwell
 
 const fs   = require('fs');
 const path = require('path');
+const _    = require('lodash');
 
-module.exports = function(robot) {
-  let brainPath = process.env.HUBOT_FILEBRAIN_PATH || process.cwd();
-  brainPath = path.join(brainPath, 'brain.json');
+const brainPath = process.env.HUBOT_FILEBRAIN_PATH || process.cwd();
+const date = new Date();
+const diskBrain = path.join(brainPath, "brain.json");
+const tmpBrain = path.join(brainPath, "brain-"
+  + date.toISOString().substr(0, 10)
+  + ".json");
+
+function doSave(robot, inMemoryData) {
+  if (!(diskData = readAndMerge(robot, diskBrain))) {
+    readAndMerge(robot, tmpBrain)
+  }
+
+  fs.writeFileSync(diskData ? diskBrain : tmpBrain, JSON.stringify(robot.brain.data, null, 4), 'utf-8');
+}
+
+function readAndMerge(robot, file) {
+  var data;
+
   try {
-    const data = fs.readFileSync(brainPath, 'utf-8');
+    data = fs.readFileSync(file, 'utf-8');
     if (data) {
       robot.brain.mergeData(JSON.parse(data));
     }
-  } catch (error) {
-    if (error.code !== 'ENOENT') { console.log('Unable to read file', error); }
+  } catch { console.log(err) }
+
+  return data;
+}
+
+module.exports = function(robot) {
+  var permData = readAndMerge(robot, diskBrain)
+  if (!permData) {
+    readAndMerge(robot, tmpBrain)
   }
-  // add the option Readable, will output an indented json
-  return robot.brain.on('save', data => fs.writeFileSync(brainPath, JSON.stringify(data, null, 4), 'utf-8'));
+
+  return robot.brain.on("save", (data) => {
+    doSave(robot, data);
+  });
 };
 
