@@ -18,6 +18,8 @@
 
 fs   = require 'fs'
 path = require 'path'
+util = require 'util'
+deepMerge = require './deepmerge'
 
 brainPath = process.env.HUBOT_FILEBRAIN_PATH || process.cwd()
 date = new Date()
@@ -26,9 +28,9 @@ tmpBrain = path.join(brainPath, "brain-" + date.toISOString().substr(0, 10) + ".
 
 module.exports = (robot) ->
   # Startup
-  permData = readAndMerge(robot, diskBrain)
+  permData = readData(diskBrain)
   if !permData
-    readAndMerge(robot, tmpBrain)
+    readData tmpBrain
 
   # On save
   robot.brain.on "save", (data) ->
@@ -42,26 +44,25 @@ module.exports = (robot) ->
     if (input = context.match[1])
       try
         json = JSON.parse input
-        robot.brain.mergeData json
+        doSave robot, json
         context.send "Brain updated."
-      catch
+      catch err
+        console.log err
         context.send "Can't parse that json, sorry!"
 
 doSave = (robot, inMemoryData) ->
-  if !(diskData = (readAndMerge robot, diskBrain))
-    readAndMerge(robot, tmpBrain)
+  if !(diskData = (readData diskBrain))
+    tmpData = readData tmpBrain
 
-  brainData = JSON.stringify robot.brain.data, null, 4
-  fs.writeFileSync (if diskData then diskBrain else tmpBrain), brainData, 'utf-8'
+  dataToSave = deepMerge (if diskData then diskData else tmpData), robot.brain.data, inMemoryData
+  fs.writeFileSync (if diskData then diskBrain else tmpBrain), (JSON.stringify dataToSave, null, 4), 'utf-8'
 
-readAndMerge = (robot, file) ->
+readData = (file) ->
   data = null
 
   try
     data = fs.readFileSync(file, 'utf-8')
     data = JSON.parse data
-    if data
-      robot.brain.mergeData data
   catch err
     if err.code != "ENOENT"
       console.log err
