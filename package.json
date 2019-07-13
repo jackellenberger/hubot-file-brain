@@ -1,25 +1,30 @@
 {
-  "name": "@jackellenberger/hubot-file-brain",
+  "name": "@jackellenberger/hubot-file-brain-utils",
   "version": "0.1.0",
-  "description": "A simple hubot brain for development that saves to a json file. Derived from file-brain.coffee by dustyburwell.",
-  "main": "brain.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "Save hubot brain to a file, plus a few fun tools",
+  "main": "index.coffee",
+  "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jackellenberger/hubot-file-brain.git"
+    "url": "git+https://github.com/jackellenberger/hubot-file-brain-utils.git"
   },
   "keywords": [
     "hubot",
-    "hubot-scripts",
-    "hubot-brain"
+    "slack",
+    "brain"
   ],
-  "author": "Jack Ellenberger <jellenberger@uchicago.edu>",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/jackellenberger/hubot-file-brain/issues"
+  "engines": {
+    "node": "10.x"
   },
-  "homepage": "https://github.com/jackellenberger/hubot-file-brain#readme",
-  "dependencies": {}
+  "author": "Jack Ellenberger <jellenberger@uchicago.edu>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jackellenberger/hubot-file-brain-utils/issues"
+  },
+  "homepage": "https://github.com/jackellenberger/hubot-file-brain-utils#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "coffee": "^5.2.1",
+    "coffeescript": "^2.4.1"
+  }
 }
