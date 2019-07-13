@@ -8,7 +8,8 @@
 #   HUBOT_FILEBRAIN_PATH
 #
 # Commands:
-#   None
+#   hubot brain-util dump - dump the current hubot brain
+#   hubot brain-util merge - merge the brain with a given json string
 #
 # Author:
 #   Jack Ellenberger <jellenberger@uchicago.edu>
@@ -30,20 +31,30 @@ module.exports = (robot) ->
     readAndMerge(robot, tmpBrain)
 
   # On save
-  return robot.brain.on "save", (data) ->
+  robot.brain.on "save", (data) ->
     doSave robot, data
 
   # Utilities
-  # robot.respond /brain-util/
+  robot.respond /brain\-util dump/, (context) ->
+    context.send (JSON.stringify robot.brain.data, null, 4)
 
- doSave  = (robot, inMemoryData) ->
+  robot.respond /brain\-util merge (.*)/, (context) ->
+    if (input = context.match[1])
+      try
+        json = JSON.parse input
+        robot.brain.mergeData json
+        context.send "Brain updated."
+      catch
+        context.send "Can't parse that json, sorry!"
+
+doSave = (robot, inMemoryData) ->
   if !(diskData = (readAndMerge robot, diskBrain))
     readAndMerge(robot, tmpBrain)
 
   brainData = JSON.stringify robot.brain.data, null, 4
   fs.writeFileSync (if diskData then diskBrain else tmpBrain), brainData, 'utf-8'
 
- readAndMerge = (robot, file) ->
+readAndMerge = (robot, file) ->
   data = null
 
   try
