@@ -40,8 +40,10 @@ module.exports = (robot) ->
 
   # Utilities
   robot.respond /brain\-util(?:s)? dump/, (context) ->
-    console.log util.inspect robot.brain
-    context.send (JSON.stringify robot.brain.data, null, 4)
+    data = Object.assign({}, robot.brain.data)
+    delete data.users
+    console.log util.inspect data
+    context.send (JSON.stringify data, null, 4)
 
   robot.respond /brain\-util(?:s)? merge (root )?(.*)/, (context) ->
     if (input = context.match[2])
