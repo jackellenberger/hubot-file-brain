@@ -22,7 +22,9 @@
     "url": "https://github.com/jackellenberger/hubot-file-brain-utils/issues"
   },
   "homepage": "https://github.com/jackellenberger/hubot-file-brain-utils#readme",
-  "dependencies": {},
+  "dependencies": {
+    "node-cache": "^4.2.0"
+  },
   "devDependencies": {
     "coffee": "^5.2.1",
     "coffeescript": "^2.4.1"

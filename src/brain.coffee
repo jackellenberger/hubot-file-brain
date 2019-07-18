@@ -39,13 +39,13 @@ module.exports = (robot) ->
     doSave robot, data
 
   # Utilities
-  robot.respond /brain\-util(?:s)? dump/, (context) ->
+  robot.respond /brain\-util(?:s)? dump/i, (context) ->
     data = Object.assign({}, robot.brain.data)
     delete data.users
     console.log util.inspect data
     context.send (JSON.stringify data, null, 4)
 
-  robot.respond /brain\-util(?:s)? merge (root )?(.*)/, (context) ->
+  robot.respond /brain\-util(?:s)? merge (root )?(.*)/i, (context) ->
     if (input = context.match[2])
       try
         json = JSON.parse input
@@ -57,7 +57,7 @@ module.exports = (robot) ->
         console.log err
         context.send "Can't parse that json, sorry!"
 
-  robot.respond /brain\-util(?:s)? set (.*) (.*)/, (context) ->
+  robot.respond /brain\-util(?:s)? set (.*) (.*)/i, (context) ->
     if (key = context.match[1]) and (val = context.match[2])
       try
         robot.brain.set key, val
@@ -66,7 +66,7 @@ module.exports = (robot) ->
         console.log err
         context.send "Something went wrong, sorry!"
 
-  robot.respond /brain\-util(?:s)? get (.*)/, (context) ->
+  robot.respond /brain\-util(?:s)? get (.*)/i, (context) ->
     if (key = context.match[1])
       try
         context.send robot.brain.get key
