@@ -1,5 +1,5 @@
 {
-  "name": "@jackellenberger/hubot-file-brain-utils",
+  "name": "hubot-file-brain-utils",
   "version": "0.1.0",
   "description": "Save hubot brain to a file, plus a few fun tools",
   "main": "index.coffee",
