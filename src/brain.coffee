@@ -69,7 +69,7 @@ module.exports = (robot) ->
   robot.respond /brain\-util(?:s)? get (.*)/, (context) ->
     if (key = context.match[1])
       try
-        context.send robot.brain.get key
+        context.send JSON.stringify robot.brain.get key, null, 2
       catch err
         console.log err
         context.send "Something went wrong, sorry!"
