@@ -1,6 +1,6 @@
 {
   "name": "hubot-file-brain-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Save hubot brain to a file, plus a few fun tools",
   "main": "index.coffee",
   "scripts": {},

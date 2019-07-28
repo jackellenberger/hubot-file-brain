@@ -88,8 +88,8 @@ readData = (file) ->
     data = fs.readFileSync(file, 'utf-8')
     data = JSON.parse data
   catch err
-    if err.code != "ENOENT"
-      console.log err
+    console.log err
+    data = null
 
   return data
 
